@@ -1,39 +1,58 @@
-import React, { useState, useEffect } from 'react'
-import pet, { ANIMALS } from '@frontendmasters/pet'
+import React, {useState, useEffect} from 'react'
+import pet, {ANIMALS} from '@frontendmasters/pet'
+import Results from './Results.jsx'
 import useDropdown from './useDropdown.jsx'
 
 const SearchParams = () => {
-    const [location, setLocation] = useState('Seattle, WA')
-    const [breeds, setBreeds] = useState([])
-    const [animal, AnimalDropdown] = useDropdown('Animal', '', ANIMALS)
-    const [breed, BreedDropdown, setBreed] = useDropdown('Breed', '', breeds)
+	const [location, setLocation] = useState('Seattle, WA')
+	const [breeds, setBreeds] = useState([])
+	const [animal, AnimalDropdown] = useDropdown('Animal', '', ANIMALS)
+	const [breed, BreedDropdown, setBreed] = useDropdown('Breed', '', breeds)
+	const [pets, setPets] = useState([])
 
-    useEffect(() => {
-        setBreeds([])
-        setBreed('')
+	const requestPets = async () => {
+		const {animals} = await pet.animals({
+			location,
+			breed,
+			type: animal
+		})
 
-        pet.breeds(animal).then(({ breeds }) => {
-            const breedStrings = breeds.map(({name}) => name)
-            setBreeds(breedStrings)
-        })
-    }, [animal, setBreed, setBreeds])
+		setPets(animals || [])
+	}
+
+	useEffect(() => {
+		setBreeds([])
+		setBreed('')
+
+		pet.breeds(animal).then(({breeds: apiBreeds}) => {
+			const breedStrings = apiBreeds.map(({name}) => name)
+			setBreeds(breedStrings)
+		})
+	}, [animal, setBreed, setBreeds])
 
 	return (
-		<div className="search-params">
-			<form action="">
-				<label htmlFor="location">
-                {location}
+		<div className='search-params'>
+			<form
+				action=''
+				onSubmit={e => {
+					e.preventDefault()
+					requestPets()
+				}}
+			>
+				<label htmlFor='location'>
+					{location}
 					<input
-						id="location"
+						id='location'
 						value={location}
-						placeholder="Location"
+						placeholder='Location'
 						onChange={e => setLocation(e.target.value)}
 					/>
 				</label>
-                <AnimalDropdown />
-                <BreedDropdown />
+				<AnimalDropdown />
+				<BreedDropdown />
 				<button>Submit</button>
 			</form>
+			<Results pets={pets} />
 		</div>
 	)
 }
