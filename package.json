@@ -38,7 +38,7 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
   },
-  "browserlist": [
+  "browserslist": [
     "last 2 Chrome versions",
     "last 2 ChromeAndroid versions",
     "last 2 Edge versions",
