@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",
     "dev": "parcel src/index.html --open",
-    "dev:mock": "cross-env PET_MOCK=mock npm run dev"
+    "dev:mock": "cross-env PET_MOCK=mock npm run dev",
+    "build": "parcel build src/index.html"
   },
   "keywords": [],
   "author": "",
